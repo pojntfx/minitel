@@ -82,3 +82,25 @@ More info can be found on [Pila's blog](https://pila.fr/wordpress/?p=361).
 4. <kbd>Funz</kbd> + <kbd>B</kbd> <kbd>4</kbd>: Sets baud rate to 4800 Baud (the maximum)
 
 More info can be found on [Retronomicon](http://retrocomputing.c3po.it/Retronomicon/html/alcatel.htm).
+
+## Testing the Adapter
+
+First, plug the PL2303HX into a USB port on your PC, then run the following:
+
+```shell
+$ sudo stty -F /dev/ttyUSB0 4800 istrip cs7 parenb -parodd brkint ignpar icrnl ixon ixany opost onlcr cread hupcl isig icanon echo echoe echok
+```
+
+This will initialize the terminal. Now, set up the Minitel using [the shortcuts](#minitel-shortcuts), and try to display something on it:
+
+```shell
+echo 'Hello, Minitel!_' | sudo tee /dev/ttyUSB0
+```
+
+If the `_` did not print correctly, run the following and try again:
+
+```shell
+echo 'ǎ' | sudo tee /dev/ttyUSB0 # Fixes # and _ etc.
+```
+
+You may use [Minicom](https://en.wikipedia.org/wiki/Minicom) for further debugging: Start it using `sudo minicom -s -D /dev/ttyUSB0` and use 4800 Baud, 7 data bits, even parity bit, 1 stop bit and disable hardware flow control.

@@ -1,0 +1,55 @@
+Minitel
+Felix Pojtinger
+2021-12-11
+
+-   1 Introduction
+    -   1.1 Contributing
+    -   1.2 License
+-   2 Compatible Minitels
+-   3 Minitel Shortcuts
+
+Introduction
+
+Contributing
+
+Found an error or have a suggestion? Please open an issue on GitHub
+(github.com/pojntfx/minitel):
+
+[QR-Code to the source code on GitHub]
+
+License
+
+This document and included source code is Free Culture/Free Software.
+
+[Badge of the AGPL-3.0 license]
+
+Minitel (c) 2021 Felix Pojtinger
+
+SPDX-License-Identifier: AGPL-3.0
+
+Compatible Minitels
+
+Your Minitel needs to have a Funz or Fnct key and the DIN-5 port at the
+back side. This includes the following Minitels:
+
+-   Minitel 1B
+-   Minitel 2
+-   Alcatel ADF 258
+
+Minitel Shortcuts
+
+Minitel terminals show the integrated phonebook by default; for them to
+be usable serial terminals, use the following shortcuts:
+
+French Minitel 1B/2:
+
+1.  Fnct + T A: Enables ASCII mode
+2.  Fnct + T E: Disables local echo
+3.  Fnct + P 4: Sets baud rate to 4800 Baud (the maximum)
+
+Italian Minitel (Alcatel ADF 258):
+
+1.  Funz + Mem: Switches to terminal mode
+2.  Funz + M A: Enables ASCII mode
+3.  Funz + M E: Disables local echo
+4.  Funz + B 4: Sets baud rate to 4800 Baud (the maximum)

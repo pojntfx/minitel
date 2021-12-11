@@ -1,0 +1,11 @@
+commit 45aca6a71f1366350e9eea5fd896cf87f45e9018
+Author: Felix Pojtinger <felix@pojtinger.com>
+Date:   Sat Dec 11 23:51:45 2021 +0100
+
+    feat: Add instructions on how to use the shortcuts
+
+commit ae52047dd496e70ec617bbc10e89ef6bcd954428
+Author: Felix Pojtinger <felix@pojtinger.com>
+Date:   Sat Dec 11 23:31:17 2021 +0100
+
+    Initial commit

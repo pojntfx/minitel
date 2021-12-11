@@ -37,6 +37,31 @@ Your Minitel needs to have a <kbd>Funz</kbd> or <kbd>Fnct</kbd> key and the DIN-
 - Minitel 2
 - Alcatel ADF 258
 
+## Minitel DIN-5 to USB/RS232/Serial Adapter
+
+To build the adapter to connect the Minitel to a PC, you need the following (cheap) components:
+
+- 220 kΩ resistor
+- 22 kΩ resistor
+- 10 kΩ resistor
+- 2N2222 transistor
+- Male DIN-5 plug
+- PL2303HX USB to UART TTL converter
+
+You will need to check the pinout of the DIN-5 plug/cable; in my case, the following mapping is present:
+
+![DIN-5 port mapping](./static/din-5-port-mapping.png)
+
+Connect like so:
+
+![Schematic and breadboard layout](./static/schematic-and-breadboard-layout.png)
+
+In my case, the breadboard prototype ended up looking like this:
+
+![Breadboard prototype](./static/breadboard-prototype.jpg)
+
+I got this layout from [Pila's blog](https://pila.fr/wordpress/?p=361).
+
 ## Minitel Shortcuts
 
 Minitel terminals show the integrated phonebook by default; for them to be usable serial terminals, use the following shortcuts:
@@ -47,9 +72,13 @@ Minitel terminals show the integrated phonebook by default; for them to be usabl
 2. <kbd>Fnct</kbd> + <kbd>T</kbd> <kbd>E</kbd>: Disables local echo
 3. <kbd>Fnct</kbd> + <kbd>P</kbd> <kbd>4</kbd>: Sets baud rate to 4800 Baud (the maximum)
 
+More info can be found on [Pila's blog](https://pila.fr/wordpress/?p=361).
+
 **Italian Minitel (Alcatel ADF 258)**:
 
 1. <kbd>Funz</kbd> + <kbd>Mem</kbd>: Switches to terminal mode
 2. <kbd>Funz</kbd> + <kbd>M</kbd> <kbd>A</kbd>: Enables ASCII mode
 3. <kbd>Funz</kbd> + <kbd>M</kbd> <kbd>E</kbd>: Disables local echo
 4. <kbd>Funz</kbd> + <kbd>B</kbd> <kbd>4</kbd>: Sets baud rate to 4800 Baud (the maximum)
+
+More info can be found on [Retronomicon](http://retrocomputing.c3po.it/Retronomicon/html/alcatel.htm).

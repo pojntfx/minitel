@@ -1,3 +1,9 @@
+commit 8f691f8a98d3fbcadb11bc61db94753d7d9fcfbd
+Author: Felix Pojtinger <felix@pojtinger.com>
+Date:   Sun Dec 12 00:22:00 2021 +0100
+
+    feat: Add notes on building the adapter
+
 commit 45aca6a71f1366350e9eea5fd896cf87f45e9018
 Author: Felix Pojtinger <felix@pojtinger.com>
 Date:   Sat Dec 11 23:51:45 2021 +0100

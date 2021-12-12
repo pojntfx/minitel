@@ -1,3 +1,9 @@
+commit 9681344e5e818acea7634ce57b70ff33d690c47d
+Author: Felix Pojtinger <felix@pojtinger.com>
+Date:   Sun Dec 12 19:31:43 2021 +0100
+
+    fix: Correct SELinux permissions
+
 commit 583e50cca690ce71c3b8f93c56c660de34232e3b
 Author: Felix Pojtinger <felix@pojtinger.com>
 Date:   Sun Dec 12 01:25:42 2021 +0100

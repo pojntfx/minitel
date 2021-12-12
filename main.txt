@@ -11,6 +11,7 @@ Felix Pojtinger
 -   5 Testing the Adapter
 -   6 Setting up the Keymap
 -   7 Setting up agetty
+-   8 Setting up tmux
 
 Introduction
 
@@ -196,10 +197,50 @@ _):
 
 You can show the login prompt again at a later time using the following:
 
-    $ sudo systemctl enable --now minitel-getty@ttyUSB0
+    $ sudo systemctl restart minitel-getty@ttyUSB0
 
 After logging in, you should get a fully-featured shell:
 
 [Minitel showing the shell]
 
 We’ll fix the #/_ characters next.
+
+Setting up tmux
+
+tmux makes using the Minitel much more enjoyable by providing support
+for panes and much more. You can use it by running:
+
+    $ tmux
+
+It should look like this:
+
+[Minitel showing tmux]
+
+To get started, I recommend taking a look at the Tmux cheatsheet.
+
+To fix the #/_ characters and enable easy resetting when turning the
+Minitel on/off, run the following:
+
+    $ echo "bind-key r run-shell \"echo 'ǎ'; reset; echo 'Terminal has been reset, press q to close'\"" >>~/.tmux.conf
+
+This will add a new command, Ctrl + b r, which will reset the terminal
+and fix the character set:
+
+[Minitel showing tmux after entering Ctrl + b r]
+
+[Minitel showing tmux with the working charset]
+
+This now allows running complex software, like Vim, Links, Lynx and
+cmus:
+
+[Minitel showing Vim]
+
+[Minitel showing DuckDuckGo on Links]
+
+[Minitel showing Hacker News on Links]
+
+[Minitel showing this page on Links]
+
+[Minitel showing DuckDuckGo on Lynx]
+
+[Minitel showing cmus]

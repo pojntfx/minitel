@@ -91,16 +91,111 @@ First, plug the PL2303HX into a USB port on your PC, then run the following:
 $ sudo stty -F /dev/ttyUSB0 4800 istrip cs7 parenb -parodd brkint ignpar icrnl ixon ixany opost onlcr cread hupcl isig icanon echo echoe echok
 ```
 
-This will initialize the terminal. Now, set up the Minitel using [the shortcuts](#minitel-shortcuts), and try to display something on it:
+This will initialize the terminal. Now, set up the Minitel using the shortcuts, and try to display something on it:
 
 ```shell
-echo 'Hello, Minitel!_' | sudo tee /dev/ttyUSB0
+$ echo 'Hello, Minitel!_' | sudo tee /dev/ttyUSB0
 ```
 
 If the `_` did not print correctly, run the following and try again:
 
 ```shell
-echo 'ǎ' | sudo tee /dev/ttyUSB0 # Fixes # and _ etc.
+$ echo 'ǎ' | sudo tee /dev/ttyUSB0 # Fixes # and _ etc.
 ```
 
 You may use [Minicom](https://en.wikipedia.org/wiki/Minicom) for further debugging: Start it using `sudo minicom -s -D /dev/ttyUSB0` and use 4800 Baud, 7 data bits, even parity bit, 1 stop bit and disable hardware flow control.
+
+## Setting up the Keymap
+
+[Alexandre Montaron](http://canal.chez.com/) has worked on improved support for the Minitel on Linux by providing a `terminfo` file; to get and use it, run the following:
+
+```shell
+$ curl -L -o /tmp/mntl.ti http://canal.chez.com/mntl.ti
+$ tic /tmp/mntl.ti -o /etc/terminfo
+```
+
+You can also find a mirror [on GitHub Gist](https://gist.github.com/pojntfx/2ad486860b596f198ddd3749cb435bf1).
+
+## Setting up agetty
+
+Using [getty](<https://en.wikipedia.org/wiki/Getty_(Unix)>), or `agetty` in our case, it is possible to log into your PC using the Minitel. Exact setup instructions depend on your distribution, but for [Fedora 35](https://getfedora.org/) the following works; be sure to set up the Minitel using the shortcuts beforehand:
+
+```shell
+$ sudo tee /usr/lib/systemd/system/minitel-getty@.service <<'EOT'
+#  SPDX-License-Identifier: LGPL-2.1-or-later
+#
+#  This file is part of systemd.
+#
+#  systemd is free software; you can redistribute it and/or modify it
+#  under the terms of the GNU Lesser General Public License as published by
+#  the Free Software Foundation; either version 2.1 of the License, or
+#  (at your option) any later version.
+
+[Unit]
+Description=Getty on %I
+Documentation=man:agetty(8) man:systemd-getty-generator(8)
+Documentation=http://0pointer.de/blog/projects/serial-console.html
+After=systemd-user-sessions.service plymouth-quit-wait.service getty-pre.target
+After=rc-local.service
+
+# If additional gettys are spawned during boot then we should make
+# sure that this is synchronized before getty.target, even though
+# getty.target didn't actually pull it in.
+Before=getty.target
+IgnoreOnIsolate=yes
+
+# IgnoreOnIsolate causes issues with sulogin, if someone isolates
+# rescue.target or starts rescue.service from multi-user.target or
+# graphical.target.
+Conflicts=rescue.service
+Before=rescue.service
+
+# On systems without virtual consoles, don't start any getty. Note
+# that serial gettys are covered by serial-getty@.service, not this
+# unit.
+ConditionPathExists=/dev/%I
+
+[Service]
+# the VT is cleared by TTYVTDisallocate
+# The '-o' option value tells agetty to replace 'login' arguments with an
+# option to preserve environment (-p), followed by '--' for safety, and then
+# the entered username.
+ExecStart=/sbin/agetty -o '-p -- \\u' --noclear -c %I 4800 m1b-x80 $TERM
+Type=idle
+Restart=always
+RestartSec=0
+UtmpIdentifier=%I
+TTYPath=/dev/%I
+TTYReset=yes
+TTYVHangup=yes
+TTYVTDisallocate=yes
+IgnoreSIGPIPE=no
+SendSIGHUP=yes
+
+# Unset locale for the console getty since the console has problems
+# displaying some internationalized messages.
+UnsetEnvironment=LANG LANGUAGE LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT LC_IDEN>
+
+[Install]
+WantedBy=getty.target
+DefaultInstance=tty1
+EOT
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable --now minitel-getty@ttyUSB0
+```
+
+You should now get a login prompt (Note the `#` where there should be a `_`):
+
+![Minitel showing a login prompt](./static/minitel-login-prompt.jpg)
+
+You can show the login prompt again at a later time using the following:
+
+```shell
+$ sudo systemctl enable --now minitel-getty@ttyUSB0
+```
+
+After logging in, you should get a fully-featured shell:
+
+![Minitel showing the shell](./static/minitel-shell.jpg)
+
+We'll fix the `#`/`_` characters next.

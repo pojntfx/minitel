@@ -191,7 +191,7 @@ You should now get a login prompt (Note the `#` where there should be a `_`):
 You can show the login prompt again at a later time using the following:
 
 ```shell
-$ sudo systemctl enable --now minitel-getty@ttyUSB0
+$ sudo systemctl restart minitel-getty@ttyUSB0
 ```
 
 After logging in, you should get a fully-featured shell:
@@ -199,3 +199,43 @@ After logging in, you should get a fully-featured shell:
 ![Minitel showing the shell](./static/minitel-shell.jpg)
 
 We'll fix the `#`/`_` characters next.
+
+## Setting up `tmux`
+
+`tmux` makes using the Minitel much more enjoyable by providing support for panes and much more. You can use it by running:
+
+```shell
+$ tmux
+```
+
+It should look like this:
+
+![Minitel showing `tmux`](./static/minitel-tmux.jpg)
+
+To get started, I recommend taking a look at the [Tmux cheatsheet](https://tmuxcheatsheet.com/).
+
+To fix the `#`/`_` characters and enable easy resetting when turning the Minitel on/off, run the following:
+
+```shell
+$ echo "bind-key r run-shell \"echo 'ǎ'; reset; echo 'Terminal has been reset, press q to close'\"" >>~/.tmux.conf
+```
+
+This will add a new command, <kbd>Ctrl</kbd> + <kbd>b</kbd> <kbd>r</kbd>, which will reset the terminal and fix the character set:
+
+![Minitel showing `tmux` after entering Ctrl + b r](./static/minitel-tmux-fixing.jpg)
+
+![Minitel showing `tmux` with the working charset](./static/minitel-tmux-fixed.jpg)
+
+This now allows running complex software, like Vim, Links, Lynx and `cmus`:
+
+![Minitel showing `Vim`](./static/minitel-vim.jpg)
+
+![Minitel showing DuckDuckGo on `Links`](./static/minitel-links-duckduckgo.jpg)
+
+![Minitel showing Hacker News on `Links`](./static/minitel-links-hn.jpg)
+
+![Minitel showing this page on `Links`](./static/minitel-this-page.jpg)
+
+![Minitel showing DuckDuckGo on `Lynx`](./static/minitel-lynx-duckduckgo.jpg)
+
+![Minitel showing cmus](./static/minitel-cmus.jpg)

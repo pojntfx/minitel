@@ -1,3 +1,15 @@
+commit de9c60e72ad073f44ae469f28c34cafeecd230f0
+Author: Felix Pojtinger <felix@pojtinger.com>
+Date:   Sun Dec 12 01:04:26 2021 +0100
+
+    feat: Add instructions on setting up `agetty`
+
+commit 8bdc648a58f5e2f5acc679549774f26f4e757aac
+Author: Felix Pojtinger <felix@pojtinger.com>
+Date:   Sun Dec 12 00:38:15 2021 +0100
+
+    feat: Add notes on testing the adapter
+
 commit 8f691f8a98d3fbcadb11bc61db94753d7d9fcfbd
 Author: Felix Pojtinger <felix@pojtinger.com>
 Date:   Sun Dec 12 00:22:00 2021 +0100

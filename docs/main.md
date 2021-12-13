@@ -155,7 +155,7 @@ Before=rescue.service
 # The '-o' option value tells agetty to replace 'login' arguments with an
 # option to preserve environment (-p), followed by '--' for safety, and then
 # the entered username.
-ExecStart=/usr/bin/sh -c "sudo stty -F /dev/ttyUSB0 4800 istrip cs7 parenb -parodd brkint ignpar icrnl ixon ixany opost onlcr cread hupcl isig icanon echo echoe echok && /sbin/agetty -o '-p -- \\u' -c %I 4800 m1b-x80 $TERM"
+ExecStart=/usr/bin/sh -c "chcon -t tty_device_t /dev/%I && sudo stty -F /dev//%I 4800 istrip cs7 parenb -parodd brkint ignpar icrnl ixon ixany opost onlcr cread hupcl isig icanon echo echoe echok && /sbin/agetty -o '-p -- \\u' -c %I 4800 m1b-x80 $TERM"
 Type=idle
 Restart=always
 UtmpIdentifier=%I
@@ -168,7 +168,6 @@ SendSIGHUP=yes
 [Install]
 WantedBy=getty.target
 EOT
-$ sudo chcon -t tty_device_t /dev/ttyUSB0
 $ sudo systemctl daemon-reload
 $ sudo systemctl enable --now minitel-getty@ttyUSB0
 ```

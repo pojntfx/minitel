@@ -1,3 +1,9 @@
+commit b8eb3bdd400482c7e427eb760585105d4e3973a4
+Author: Felix Pojtinger <felix@pojtinger.com>
+Date:   Mon Dec 13 02:03:01 2021 +0100
+
+    fix: `chcon` in service to prevent permission errors
+
 commit 9681344e5e818acea7634ce57b70ff33d690c47d
 Author: Felix Pojtinger <felix@pojtinger.com>
 Date:   Sun Dec 12 19:31:43 2021 +0100

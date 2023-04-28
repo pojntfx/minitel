@@ -1,0 +1,234 @@
+Minitel
+Felicitas Pojtinger
+2021-12-11
+
+-   1 Introduction
+    -   1.1 Contributing
+    -   1.2 License
+-   2 Compatible Minitels
+-   3 Minitel DIN-5 to USB/RS232/Serial Adapter
+-   4 Minitel Shortcuts
+-   5 Testing the Adapter
+-   6 Setting up the Keymap
+-   7 Setting up agetty
+-   8 Setting up tmux
+
+Introduction
+
+Contributing
+
+Found an error or have a suggestion? Please open an issue on GitHub
+(github.com/pojntfx/minitel):
+
+[QR-Code to the source code on GitHub]
+
+License
+
+This document and included source code is Free Culture/Free Software.
+
+[Badge of the AGPL-3.0 license]
+
+Minitel (c) 2021 Felicitas Pojtinger
+
+SPDX-License-Identifier: AGPL-3.0
+
+Compatible Minitels
+
+Your Minitel needs to have a Funz or Fnct key and the DIN-5 port at the
+back side. This includes the following Minitels:
+
+-   Minitel 1B
+-   Minitel 2
+-   Alcatel ADF 258
+
+Minitel DIN-5 to USB/RS232/Serial Adapter
+
+To build the adapter to connect the Minitel to a PC, you need the
+following (cheap) components:
+
+-   220 kΩ resistor
+-   22 kΩ resistor
+-   10 kΩ resistor
+-   2N2222 transistor
+-   Male DIN-5 plug
+-   PL2303HX USB to UART TTL converter
+
+You will need to check the pinout of the DIN-5 plug/cable; in my case,
+the following mapping is present:
+
+[DIN-5 port mapping]
+
+Connect like so:
+
+[Schematic and breadboard layout]
+
+In my case, the breadboard prototype ended up looking like this:
+
+[Breadboard prototype]
+
+I got this layout from Pila’s blog.
+
+Minitel Shortcuts
+
+Minitel terminals show the integrated phonebook by default; for them to
+be usable serial terminals, use the following shortcuts:
+
+French Minitel 1B/2:
+
+1.  Fnct + T A: Enables ASCII mode
+2.  Fnct + T E: Disables local echo
+3.  Fnct + P 4: Sets baud rate to 4800 Baud (the maximum)
+
+More info can be found on Pila’s blog.
+
+Italian Minitel (Alcatel ADF 258):
+
+1.  Funz + Mem: Switches to terminal mode
+2.  Funz + M A: Enables ASCII mode
+3.  Funz + M E: Disables local echo
+4.  Funz + B 4: Sets baud rate to 4800 Baud (the maximum)
+
+More info can be found on Retronomicon.
+
+Testing the Adapter
+
+First, plug the PL2303HX into a USB port on your PC, then run the
+following:
+
+    $ sudo stty -F /dev/ttyUSB0 4800 istrip cs7 parenb -parodd brkint ignpar icrnl ixon ixany opost onlcr cread hupcl isig icanon echo echoe echok
+
+This will initialize the terminal. Now, set up the Minitel using the
+shortcuts, and try to display something on it:
+
+    $ echo 'Hello, Minitel!_' | sudo tee /dev/ttyUSB0
+
+If the _ did not print correctly, run the following and try again:
+
+    $ echo 'ǎ' | sudo tee /dev/ttyUSB0 # Fixes # and _ etc.
+
+You may use Minicom for further debugging: Start it using
+sudo minicom -s -D /dev/ttyUSB0 and use 4800 Baud, 7 data bits, even
+parity bit, 1 stop bit and disable hardware flow control.
+
+Setting up the Keymap
+
+Alexandre Montaron has worked on improved support for the Minitel on
+Linux by providing a terminfo file; to get and use it, run the
+following:
+
+    $ curl -L -o /tmp/mntl.ti http://canal.chez.com/mntl.ti
+    $ tic /tmp/mntl.ti -o /etc/terminfo
+
+You can also find a mirror on GitHub Gist.
+
+Setting up agetty
+
+Using getty, or agetty in our case, it is possible to log into your PC
+using the Minitel. Exact setup instructions depend on your distribution,
+but for Fedora 35 the following works; be sure to set up the Minitel
+using the shortcuts beforehand:
+
+    $ sudo tee /usr/lib/systemd/system/minitel-getty@.service <<'EOT'
+    #  SPDX-License-Identifier: LGPL-2.1-or-later
+    #
+    #  This file is part of systemd.
+    #
+    #  systemd is free software; you can redistribute it and/or modify it
+    #  under the terms of the GNU Lesser General Public License as published by
+    #  the Free Software Foundation; either version 2.1 of the License, or
+    #  (at your option) any later version.
+
+    [Unit]
+    Description=Serial Getty on %I
+    Documentation=man:agetty(8) man:systemd-getty-generator(8)
+    Documentation=http://0pointer.de/blog/projects/serial-console.html
+    BindsTo=dev-%i.device
+    After=dev-%i.device systemd-user-sessions.service plymouth-quit-wait.service getty-pre.target
+    After=rc-local.service
+
+    # If additional gettys are spawned during boot then we should make
+    # sure that this is synchronized before getty.target, even though
+    # getty.target didn't actually pull it in.
+    Before=getty.target
+    IgnoreOnIsolate=yes
+
+    # IgnoreOnIsolate causes issues with sulogin, if someone isolates
+    # rescue.target or starts rescue.service from multi-user.target or
+    # graphical.target.
+    Conflicts=rescue.service
+    Before=rescue.service
+
+    [Service]
+    # The '-o' option value tells agetty to replace 'login' arguments with an
+    # option to preserve environment (-p), followed by '--' for safety, and then
+    # the entered username.
+    ExecStart=/usr/bin/sh -c "chcon -t tty_device_t /dev/%I && sudo stty -F /dev//%I 4800 istrip cs7 parenb -parodd brkint ignpar icrnl ixon ixany opost onlcr cread hupcl isig icanon echo echoe echok && /sbin/agetty -o '-p -- \\u' -c %I 4800 m1b-x80 $TERM"
+    Type=idle
+    Restart=always
+    UtmpIdentifier=%I
+    TTYPath=/dev/%I
+    TTYReset=yes
+    TTYVHangup=yes
+    IgnoreSIGPIPE=no
+    SendSIGHUP=yes
+
+    [Install]
+    WantedBy=getty.target
+    EOT
+    $ sudo systemctl daemon-reload
+    $ sudo systemctl enable --now minitel-getty@ttyUSB0
+
+You should now get a login prompt (Note the # where there should be a
+_):
+
+[Minitel showing a login prompt]
+
+You can show the login prompt again at a later time using the following:
+
+    $ sudo systemctl restart minitel-getty@ttyUSB0
+
+After logging in, you should get a fully-featured shell:
+
+[Minitel showing the shell]
+
+We’ll fix the #/_ characters next.
+
+Setting up tmux
+
+tmux makes using the Minitel much more enjoyable by providing support
+for panes and much more. You can use it by running:
+
+    $ tmux
+
+It should look like this:
+
+[Minitel showing tmux]
+
+To get started, I recommend taking a look at the Tmux cheatsheet.
+
+To fix the #/_ characters and enable easy resetting when turning the
+Minitel on/off, run the following:
+
+    $ echo "bind-key r run-shell \"echo 'ǎ'; reset; echo 'Terminal has been reset, press q to close'\"" >>~/.tmux.conf
+
+This will add a new command, Ctrl + b r, which will reset the terminal
+and fix the character set:
+
+[Minitel showing tmux after entering Ctrl + b r]
+
+[Minitel showing tmux with the working charset]
+
+This now allows running complex software, like Vim, Links, Lynx and
+cmus:
+
+[Minitel showing Vim]
+
+[Minitel showing DuckDuckGo on Links]
+
+[Minitel showing Hacker News on Links]
+
+[Minitel showing this page on Links]
+
+[Minitel showing DuckDuckGo on Lynx]
+
+[Minitel showing cmus]

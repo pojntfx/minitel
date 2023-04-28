@@ -1,0 +1,47 @@
+commit 5ae68fea6e4c19b98922e7e68e0314606bc4b594
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Mon Dec 13 02:03:01 2021 +0100
+
+    fix: `chcon` in service to prevent permission errors
+
+commit e62c990563b9d94c340efc6a4436c56ecfce32ad
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Sun Dec 12 19:31:43 2021 +0100
+
+    fix: Correct SELinux permissions
+
+commit d37d74750ef7b294842cacf62ac268edd50aebb2
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Sun Dec 12 01:25:42 2021 +0100
+
+    feat: Add section on `tmux`
+
+commit 904a243edd17bb3bea5bd95667469bf01b36ea1f
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Sun Dec 12 01:04:26 2021 +0100
+
+    feat: Add instructions on setting up `agetty`
+
+commit 4cd1cb42afc0e45568d08606f5223a7a5f580311
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Sun Dec 12 00:38:15 2021 +0100
+
+    feat: Add notes on testing the adapter
+
+commit 28728b5f8d5347e19eeb4c026d78868d31ae5a39
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Sun Dec 12 00:22:00 2021 +0100
+
+    feat: Add notes on building the adapter
+
+commit e699a468efc5440e1254ccc32de8cd9602f52380
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Sat Dec 11 23:51:45 2021 +0100
+
+    feat: Add instructions on how to use the shortcuts
+
+commit 92a38ce9c7c6f7518a32ec5082059445080b3a20
+Author: Felicitas Pojtinger <felicitas@pojtinger.com>
+Date:   Sat Dec 11 23:31:17 2021 +0100
+
+    Initial commit

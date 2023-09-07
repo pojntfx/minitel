@@ -100,7 +100,7 @@ $ echo 'Hello, Minitel!_' | sudo tee /dev/ttyUSB0
 If the `_` did not print correctly, run the following and try again:
 
 ```shell
-$ echo 'ǎ' | sudo tee /dev/ttyUSB0 # Fixes # and _ etc.
+$ printf '\016' | sudo tee /dev/ttyUSB0 # Fixes # and _ etc.
 ```
 
 You may use [Minicom](https://en.wikipedia.org/wiki/Minicom) for further debugging: Start it using `sudo minicom -s -D /dev/ttyUSB0` and use 4800 Baud, 7 data bits, even parity bit, 1 stop bit and disable hardware flow control.

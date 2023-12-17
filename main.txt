@@ -22,11 +22,15 @@ Found an error or have a suggestion? Please open an issue on GitHub
 
 [QR-Code to the source code on GitHub]
 
+QR-Code to the source code on GitHub
+
 License
 
 This document and included source code is Free Culture/Free Software.
 
 [Badge of the AGPL-3.0 license]
+
+Badge of the AGPL-3.0 license
 
 Minitel (c) 2021 Felicitas Pojtinger
 
